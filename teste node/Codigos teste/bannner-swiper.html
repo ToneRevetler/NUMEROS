@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<style>
+       .swiper-pagination-bullet {
+    width: 15%;
+    margin-left: 1% !important;
+    opacity: 1;
+    background: rgba(238, 238, 238, 0.6);;
+    height: 4px;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    transition: background 200ms;
+    
+}
+.slider-text {
+    position: fixed;
+    color: white;
+    bottom: 15px;
+    margin-left: 1%;
+}
+.swiper-pagination-bullet::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: opacity 200ms;
+}
+
+.swiper-pagination-bullet-active {
+    background: rgba(#000, 0.2) !important;
+    background: rgba(#000, 0.4) !important;
+    
+}
+.swiper-pagination-bullet-active::before {
+    background-color: white;
+    animation: slide-progress 4s cubic-bezier(.3,0,.3,1) forwards;  
+}
+.swiper-pagination-bullet-active::before > .swiper-paused & {
+    opacity: 0;
+    animation-play-state: paused;
+}
+@media screen and (max-width: 880px) {
+    .slider-text {
+        display: none !important;
+    }
+    .swiper-pagination {
+        width: 100% !important;
+        bottom: 10px !important;
+    }
+    .swiper-pagination-bullet {
+        border-radius: 50%;
+        width: 4px !important;
+    }
+    .swiper-slide > img {
+        height: 260px;
+    }
+}
+
+@keyframes slide-progress {
+    0% {
+        transform: translateX(-100%);
+        // width: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        // width: 100%;
+    }
+}
+
+}
+</style>
+
+
+<div class="swiper">
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide"><img src="img/slider/1.jpg"></div>
+        <div class="swiper-slide"><img src="img/slider/2.jpg"></div>
+        <div class="swiper-slide"><img src="img/slider/3.jpg"></div>
+        <div class="swiper-slide"><img src="img/slider/4.jpg"></div>
+        <div class="swiper-slide"><img src="img/slider/5.jpg"></div>
+        <div class="swiper-slide"><img src="img/slider/6.jpg"></div>
+    </div>
+    <div class="swiper-pagination"></div>
+    
+</div>
+
+
+
+<script>
+    const arrText_Slider = new Array('text','text','text','text','text','text');
+    const swiper = new Swiper(".swiper", {
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+            renderBullet: function(index,className){
+                return '<span class="' + className + '">' + '<div class="slider-text">' + (arrText_Slider[index]) + '</div>' + '</span>' 
+            }
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+        },
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false
+        },
+        loop: true,
+        watchSlidesProgress: true
+    });
+document.addEventListener('mouseenter', event => {
+    const el = event.target;
+    if (el && el.matches && el.matches('.swiper-container')) {
+                // console.log('mouseenter');
+                // console.log('autoplay running', swiper.autoplay.running);
+                el.swiper.autoplay.stop();
+                el.classList.add('swiper-paused');
+                
+                const activeNavItem = el.querySelector('.swiper-pagination-bullet-active');
+                activeNavItem.style.animationPlayState="paused";
+            }
+        }, true);
+
+document.addEventListener('mouseleave', event => {
+            // console.log('mouseleave', swiper.activeIndex, swiper.slides[swiper.activeIndex].progress);
+            // console.log('autoplay running', swiper.autoplay.running);
+            const el = event.target;
+            if (el && el.matches && el.matches('.swiper-container')) {
+                el.swiper.autoplay.start();
+                el.classList.remove('swiper-paused');
+
+                const activeNavItem = el.querySelector('.swiper-pagination-bullet-active');
+                
+                activeNavItem.classList.remove('swiper-pagination-bullet-active');
+            // activeNavItem.style.animation = 'none';
+
+            setTimeout(() => {
+                activeNavItem.classList.add('swiper-pagination-bullet-active');
+                // activeNavItem.style.animation = '';
+            }, 10);
+        }
+    }, true);
+</script>
+</body>
+</html>
